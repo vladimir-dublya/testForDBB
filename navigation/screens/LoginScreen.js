@@ -29,7 +29,7 @@ const discovery = {
   tokenEndpoint: 'https://www.dropbox.com/oauth2/token',
 };
 
-export default function SettingsScreen() {
+export default function LoginScreen() {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.user);
   const { entries, loading } = useSelector((state) => state.files);
@@ -57,49 +57,8 @@ export default function SettingsScreen() {
   }, [response]);
 
   React.useEffect(() => {
-    if (token) {
-      dispatch(FilesActions.initFiles(token));
-    }
-  }, [token]);
+    promptAsync({ useProxy });
+  }, []);
 
-  return token ? (
-    <>
-      {loading ? (
-        <ActivityIndicator />
-      ) : (
-        <View style={style.containerCards}>
-          {entries.map((entity) => (
-            <FileCard file={entity} />
-          ))}
-        </View>
-      )}
-    </>
-  ) : (
-    <View style={style.containerLogin}>
-      <Button
-        disabled={!request}
-        title='Login'
-        onPress={() => {
-          promptAsync({ useProxy });
-        }}
-      />
-    </View>
-  );
+  return <></>;
 }
-
-const style = StyleSheet.create({
-  containerCards: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    flexDirection: 'row',
-  },
-  containerLogin: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

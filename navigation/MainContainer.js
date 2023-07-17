@@ -46,12 +46,12 @@ export default function MainContainer() {
       >
         <Tab.Screen
           name={home}
-          component={SettingsScreen}
-          // listeners={{
-          //   tabPress: handleClickOnAnotherTab,
-          // }}
+          component={''}
+          listeners={{
+            tabPress: handleClickOnAnotherTab,
+          }}
         />
-        <Tab.Screen name={files} component={HomeScreen} />
+        <Tab.Screen name={files} component={SettingsScreen} />
         <Tab.Screen
           name={create}
           component={''}
