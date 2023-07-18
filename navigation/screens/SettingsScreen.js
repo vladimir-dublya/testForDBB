@@ -16,6 +16,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Modal,
+  TextInput,
   AsyncStorage,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
@@ -35,6 +36,7 @@ const discovery = {
 
 export default function SettingsScreen() {
   const dispatch = useDispatch();
+  const [tokenFromInput, setTokenFromInput] = React.useState('');
   const { entries, loading, path, token, loadingInfo } = useSelector(
     (state) => state.files,
   );
@@ -70,6 +72,10 @@ export default function SettingsScreen() {
     dispatch(FilesActions.initFiles());
   };
 
+  const handleSetToken = () => {
+    dispatch(FilesActions.assignUser(tokenFromInput));
+  };
+
   return token ? (
     <>
       {loading ? (
@@ -93,9 +99,16 @@ export default function SettingsScreen() {
     </>
   ) : (
     <View style={style.containerLogin}>
+      <TextInput
+        placeholder='Token'
+        style={style.input}
+        onChangeText={setTokenFromInput}
+        value={tokenFromInput}
+      />
+      <Button title='Login by Token' onPress={handleSetToken} />
       <Button
         disabled={!request}
-        title='Login'
+        title='Login by Expo'
         onPress={() => {
           promptAsync({ useProxy });
         }}
@@ -122,8 +135,16 @@ const style = StyleSheet.create({
     bottom: 10,
     right: 10,
   },
+  input: {
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#e0e0e0',
+    width: 300,
+  },
   containerLogin: {
     flex: 1,
+    gap: 10,
     width: '100%',
     height: '100%',
     flexDirection: 'column',

@@ -45,7 +45,9 @@ const filesSlice = createSlice({
     builder.addCase(initFiles.rejected, (state, action) => {
       state.loading = false;
       state.error = 'rejected';
-      alert(state.error);
+      if (state.token) {
+        alert(state.error);
+      }
     });
     builder.addCase(deleteFile.pending, (state) => {
       state.loading = true;
@@ -59,7 +61,9 @@ const filesSlice = createSlice({
     builder.addCase(deleteFile.rejected, (state, action) => {
       state.loading = false;
       state.error = 'rejected';
-      alert(state.error);
+      if (state.token) {
+        alert(state.error);
+      }
     });
     builder.addCase(getInfo.pending, (state) => {
       state.loadingInfo = true;
@@ -71,7 +75,9 @@ const filesSlice = createSlice({
     builder.addCase(getInfo.rejected, (state, action) => {
       state.loadingInfo = false;
       state.error = 'rejected';
-      alert(state.error);
+      if (state.token) {
+        alert(state.error);
+      }
     });
     builder.addCase(getMove.pending, (state) => {
       state.loading = true;
@@ -82,7 +88,9 @@ const filesSlice = createSlice({
     builder.addCase(getMove.rejected, (state, action) => {
       state.loading = false;
       state.error = 'rejected';
-      alert(state.error);
+      if (state.token) {
+        alert(state.error);
+      }
     });
   },
 });
