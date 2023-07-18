@@ -106,7 +106,6 @@ export const initFiles = createAsyncThunk(
   'files/fetch',
   async (path = '', thunkAPI) => {
     const currentState = thunkAPI.getState();
-    console.log('pathFetch:', currentState.files.path);
     const temp = await filesService.getFiles({
       token: currentState.files.token,
       path: currentState.files.path,

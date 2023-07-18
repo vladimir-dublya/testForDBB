@@ -3,7 +3,6 @@ import axios from 'axios';
 
 class FilesService {
   async getFiles(prop) {
-    console.log('propPath:', prop.path);
     const response = await axios.post(
       'https://api.dropboxapi.com/2/files/list_folder',
       {
@@ -54,7 +53,6 @@ class FilesService {
   }
 
   async getMove(prop) {
-    console.log('props:', prop);
     const response = await axios.post(
       'https://api.dropboxapi.com/2/files/move_v2',
       {

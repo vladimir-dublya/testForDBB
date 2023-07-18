@@ -37,7 +37,6 @@ export const FileCard = ({ file }) => {
     setContextMenuVisible(true);
     if (file['.tag'] === 'file') {
       dispatch(FilesActions.getInfo(file));
-      console.log('infoDate:', info.data.client_modified);
       const date = new Date(info.data.client_modified);
       setDate(date.toLocaleString('en-GB', { timeZone: 'UTC' }));
     }
