@@ -48,7 +48,7 @@ export const FileCard = ({ file }) => {
 
   return (
     <>
-      <View style={style.card}>
+      <View style={styles.card}>
         <Ionicons
           name={
             file['.tag'] === 'file'
@@ -85,12 +85,13 @@ export const FileCard = ({ file }) => {
                 Delete File
               </Text>
               {file['.tag'] === 'file' && (
-                <>
-                  <Text style={styles.menuItem}>Last Modified: </Text>
-                  <Text style={styles.menuItem}>{date}</Text>
-                  <Text style={styles.menuItem}>Size: </Text>
-                  <Text style={styles.menuItem}>{info.data.size} Mb</Text>
-                </>
+                <View style={styles.info}>
+                  <Text style={styles.info_text}>Last Modified: </Text>
+                  <Text style={styles.info_text}>{date}</Text>
+                  <Text style={styles.info_text}>
+                    Size: {info.data.size} Kb
+                  </Text>
+                </View>
               )}
             </View>
           </>
@@ -100,16 +101,23 @@ export const FileCard = ({ file }) => {
   );
 };
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   card: {
     flex: 1,
     width: '30%',
     flexDirection: 'column',
     alignItems: 'center',
   },
-});
-
-const styles = StyleSheet.create({
+  info: {
+    flex: 1,
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    padding: 10,
+  },
+  info_text: {
+    color: 'grey',
+    fontSize: 12,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -130,10 +138,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     top: '50%',
     left: '50%',
-    transform: [{ translateX: -50 }, { translateY: -50 }],
+    transform: [{ translateX: -100 }, { translateY: -100 }],
   },
   menuItem: {
     padding: 10,
-    width: 130,
+    width: 200,
   },
 });
