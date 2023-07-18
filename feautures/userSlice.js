@@ -1,21 +1,24 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { authService } from '../services/authService';
-const initialState = {
-  token: '',
-  loading: false,
-  error: '',
-};
+// import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-const userSlice = createSlice({
-  name: 'user',
-  initialState,
-  reducers: {
-    assignUser: (state, action) => {
-      state.token = action.payload;
-    },
-  },
-});
+// const initialState = {
+//   token: '',
+//   loading: false,
+//   error: '',
+// };
 
-export const { assignUser } = userSlice.actions;
+// const userSlice = createSlice({
+//   name: 'user',
+//   initialState,
+//   reducers: {
+//     assignUser: (state, action) => {
+//       state.token = action.payload;
+//     },
+//     returnUser: (state, action) => {
+//       return state.token;
+//     },
+//   },
+// });
 
-export default userSlice.reducer;
+// export const { assignUser, returnUser } = userSlice.actions;
+
+// export default userSlice.reducer;

@@ -16,11 +16,14 @@ import {
   StyleSheet,
   ActivityIndicator,
   Modal,
+  AsyncStorage,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { assignUser } from '../../feautures/userSlice';
+
 import * as FilesActions from '../../feautures/filesSlice';
 import { FileCard } from '../../Components/Cards/FileCard.js';
+import * as DocumentPicker from 'expo-document-picker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 WebBrowser.maybeCompleteAuthSession();
 const useProxy = Platform.select({ web: false, default: true });
@@ -32,8 +35,9 @@ const discovery = {
 
 export default function SettingsScreen() {
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.user);
-  const { entries, loading } = useSelector((state) => state.files);
+  const { entries, loading, path, token, loadingInfo } = useSelector(
+    (state) => state.files,
+  );
   const [request, response, promptAsync] = useAuthRequest(
     {
       responseType: ResponseType.Token,
@@ -50,29 +54,59 @@ export default function SettingsScreen() {
     discovery,
   );
 
+  const docPicker = async () => {
+    try {
+      const res = await DocumentPicker.getDocumentAsync();
+
+      const formData = new FormData();
+      formData.append('file', res);
+      dispatch(FilesActions.uploadFile({ token, formData }));
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('Document picker cancelled');
+      } else {
+        console.log('Error:', err);
+      }
+    }
+  };
+
   React.useEffect(() => {
     if (response?.type === 'success') {
       const { access_token } = response.params;
-      dispatch(assignUser(access_token));
+      dispatch(FilesActions.assignUser(access_token));
     }
   }, [response]);
 
   React.useEffect(() => {
-    if (token) {
-      dispatch(FilesActions.initFiles(token));
-    }
+    dispatch(FilesActions.initFiles());
   }, [token]);
+
+  const handleBack = () => {
+    dispatch(FilesActions.moveHome());
+    dispatch(FilesActions.initFiles());
+  };
 
   return token ? (
     <>
-      {loading ? (
+      {loading && loadingInfo ? (
         <ActivityIndicator />
       ) : (
-        <View style={style.containerCards}>
-          {entries.map((entity) => (
-            <FileCard file={entity} />
-          ))}
-        </View>
+        <>
+          <View style={style.containerCards}>
+            {entries.map((entity) => (
+              <FileCard file={entity} />
+            ))}
+          </View>
+          <Ionicons name='home-outline' size={55} onPress={handleBack} />
+          <View
+            style={{
+              width: '30%',
+              justifyContent: 'center',
+            }}
+          >
+            <Button title='Select File' onPress={docPicker} />
+          </View>
+        </>
       )}
     </>
   ) : (

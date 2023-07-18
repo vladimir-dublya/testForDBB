@@ -14,22 +14,28 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as FilesActions from '../../feautures/filesSlice';
 
 export const FileCard = ({ file }) => {
-  const { token } = useSelector((state) => state.user);
-  const { loadingInfo, info } = useSelector((state) => state.files);
+  const { loadingInfo, info, path, token } = useSelector(
+    (state) => state.files,
+  );
   const [date, setDate] = React.useState();
   const dispatch = useDispatch();
   const handleOpen = () => {
-    file['.tag'] === 'folder' &&
-      dispatch(FilesActions.initFiles(token, file.name));
+    if (file['.tag'] === 'folder') {
+      dispatch(FilesActions.movePathForward(file.name));
+
+      dispatch(FilesActions.initFiles());
+    }
   };
 
   const [isContextMenuVisible, setContextMenuVisible] = React.useState(false);
 
   const showContextMenu = () => {
     setContextMenuVisible(true);
-    dispatch(FilesActions.getInfo({ token, file }));
-    const date = new Date(info.data.client_modified);
-    setDate(date.toLocaleString('en-GB', { timeZone: 'UTC' }));
+    if (file['.tag'] === 'file') {
+      dispatch(FilesActions.getInfo({ token, file }));
+      const date = new Date(info.data.client_modified);
+      setDate(date.toLocaleString('en-GB', { timeZone: 'UTC' }));
+    }
   };
 
   const hideContextMenu = () => {
@@ -51,10 +57,11 @@ export const FileCard = ({ file }) => {
           }
           size={50}
           color='#7fa5e3'
+          onPress={() => handleOpen()}
         />
         <Text>{file.name}</Text>
         <Ionicons
-          name='ios-options-outline'
+          name='ellipsis-horizontal-outline'
           size={25}
           onPress={showContextMenu}
         />
@@ -82,7 +89,7 @@ export const FileCard = ({ file }) => {
                   <Text style={styles.menuItem}>Last Modified: </Text>
                   <Text style={styles.menuItem}>{date}</Text>
                   <Text style={styles.menuItem}>Size: </Text>
-                  <Text style={styles.menuItem}>{info.data.size}Mb</Text>
+                  <Text style={styles.menuItem}>{info.data.size} Mb</Text>
                 </>
               )}
             </View>

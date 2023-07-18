@@ -1,17 +1,18 @@
 import * as React from 'react';
 import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
 
 class FilesService {
-  async getFiles(token) {
-    console.log('getFiles');
+  async getFiles(prop) {
+    console.log('propPath:', prop.path);
     const response = await axios.post(
       'https://api.dropboxapi.com/2/files/list_folder',
       {
-        path: '',
+        path: prop.path,
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${prop.token}`,
           'Content-Type': 'application/json',
         },
       },
@@ -42,6 +43,21 @@ class FilesService {
       {
         path: '/' + prop.file.name,
       },
+      {
+        headers: {
+          Authorization: `Bearer ${prop.token}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+
+    return response;
+  }
+
+  async uploadFile(prop) {
+    const response = await axios.post(
+      'https://content.dropboxapi.com/2/files/upload',
+      prop.formData,
       {
         headers: {
           Authorization: `Bearer ${prop.token}`,

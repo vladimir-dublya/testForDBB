@@ -4,9 +4,11 @@ import { filesService } from '../services/filesService';
 const initialState = {
   entries: [],
   loading: false,
+  path: '',
   loadingInfo: false,
   error: null,
   info: { data: { client_modified: '', size: '' } },
+  token: '',
 };
 
 const filesSlice = createSlice({
@@ -15,6 +17,20 @@ const filesSlice = createSlice({
   reducers: {
     assignFiles: (state, action) => {
       state.files = action.payload;
+    },
+    movePathForward: (state, action) => {
+      state.path = state.path + `/${action.payload}`;
+      console.log('ghjgjhg', state.path);
+    },
+    movePathBack: (state, action) => {
+      state.path = state.path.split('/').pop().join('/');
+      console.log('back');
+    },
+    moveHome: (state, action) => {
+      state.path = '';
+    },
+    assignUser: (state, action) => {
+      state.token = action.payload;
     },
   },
 
@@ -34,7 +50,6 @@ const filesSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(deleteFile.fulfilled, (state, action) => {
-      console.log('action: ', action.payload.data.metadata);
       state.entries = state.entries.filter(
         (entry) => entry.name !== action.payload.data.metadata.name,
       );
@@ -55,23 +70,55 @@ const filesSlice = createSlice({
       state.loadingInfo = false;
       state.error = 'rejected';
     });
+    builder.addCase(uploadFile.pending, (state) => {
+      state.loadingInfo = true;
+    });
+    builder.addCase(uploadFile.fulfilled, (state, action) => {
+      console.log('upload: ', Object.keys(action.payload));
+      //  state.entries = state.entries.push(action.payload);
+      state.loadingInfo = false;
+    });
+    builder.addCase(uploadFile.rejected, (state, action) => {
+      state.loadingInfo = false;
+      console.log('rejected upload:', action);
+      state.error = 'rejected';
+    });
   },
 });
 
-export const { assignFiles } = filesSlice.actions;
+export const {
+  assignFiles,
+  movePathForward,
+  movePathBack,
+  moveHome,
+  assignUser,
+} = filesSlice.actions;
 
-export const initFiles = createAsyncThunk('files/fetch', async (token) => {
-  const temp = await filesService.getFiles(token);
-  return temp;
-});
+export const initFiles = createAsyncThunk(
+  'files/fetch',
+  async (path = '', thunkAPI) => {
+    const currentState = thunkAPI.getState();
+    console.log('pathFetch:', currentState.files.path);
+    const temp = await filesService.getFiles({
+      token: currentState.files.token,
+      path: currentState.files.path,
+    });
+    return temp;
+  },
+);
 
-export const deleteFile = createAsyncThunk('files/delete', async (token) => {
+export const deleteFile = createAsyncThunk('files/delete', async () => {
   const temp = await filesService.deleteFile(token);
   return temp;
 });
 
-export const getInfo = createAsyncThunk('files/info', async (token) => {
+export const getInfo = createAsyncThunk('files/info', async () => {
   const temp = await filesService.getInfo(token);
+  return temp;
+});
+
+export const uploadFile = createAsyncThunk('files/upload', async () => {
+  const temp = await filesService.uploadFile(token);
   return temp;
 });
 
