@@ -1,6 +1,5 @@
 import * as React from 'react';
 import axios from 'axios';
-import { useSelector, useDispatch } from 'react-redux';
 
 class FilesService {
   async getFiles(prop) {
