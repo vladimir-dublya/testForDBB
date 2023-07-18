@@ -45,6 +45,7 @@ const filesSlice = createSlice({
     builder.addCase(initFiles.rejected, (state, action) => {
       state.loading = false;
       state.error = 'rejected';
+      alert(state.error);
     });
     builder.addCase(deleteFile.pending, (state) => {
       state.loading = true;
@@ -58,6 +59,7 @@ const filesSlice = createSlice({
     builder.addCase(deleteFile.rejected, (state, action) => {
       state.loading = false;
       state.error = 'rejected';
+      alert(state.error);
     });
     builder.addCase(getInfo.pending, (state) => {
       state.loadingInfo = true;
@@ -69,6 +71,18 @@ const filesSlice = createSlice({
     builder.addCase(getInfo.rejected, (state, action) => {
       state.loadingInfo = false;
       state.error = 'rejected';
+      alert(state.error);
+    });
+    builder.addCase(getMove.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getMove.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(getMove.rejected, (state, action) => {
+      state.loading = false;
+      state.error = 'rejected';
+      alert(state.error);
     });
   },
 });
@@ -115,6 +129,20 @@ export const getInfo = createAsyncThunk(
       token: currentState.files.token,
       path: currentState.files.path,
       file,
+    });
+    return temp;
+  },
+);
+
+export const getMove = createAsyncThunk(
+  'files/getMove',
+  async (request, thunkAPI) => {
+    const currentState = thunkAPI.getState();
+    const temp = await filesService.getMove({
+      token: currentState.files.token,
+      path: currentState.files.path,
+      toPath: request.toPath,
+      fileName: request.fileName,
     });
     return temp;
   },

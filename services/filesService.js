@@ -53,6 +53,25 @@ class FilesService {
 
     return response;
   }
+
+  async getMove(prop) {
+    console.log('props:', prop);
+    const response = await axios.post(
+      'https://api.dropboxapi.com/2/files/move_v2',
+      {
+        from_path: prop.path + '/' + prop.fileName,
+        to_path: prop.toPath + '/' + prop.fileName,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${prop.token}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+
+    return response;
+  }
 }
 
 export const filesService = new FilesService();

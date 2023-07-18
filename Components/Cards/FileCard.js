@@ -8,17 +8,21 @@ import {
   ActivityIndicator,
   Modal,
   TouchableWithoutFeedback,
+  SafeAreaView,
+  TextInput,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSelector, useDispatch } from 'react-redux';
 import * as FilesActions from '../../feautures/filesSlice';
 
 export const FileCard = ({ file }) => {
-  const { loadingInfo, info, path, token } = useSelector(
+  const { loadingInfo, info, path, token, error } = useSelector(
     (state) => state.files,
   );
   const [date, setDate] = React.useState();
   const dispatch = useDispatch();
+  const [move, setMove] = React.useState(false);
+  const [moveTo, setMoveTo] = React.useState('');
   const handleOpen = () => {
     if (file['.tag'] === 'folder') {
       dispatch(FilesActions.movePathForward(file.name));
@@ -33,6 +37,7 @@ export const FileCard = ({ file }) => {
     setContextMenuVisible(true);
     if (file['.tag'] === 'file') {
       dispatch(FilesActions.getInfo(file));
+      console.log('infoDate:', info.data.client_modified);
       const date = new Date(info.data.client_modified);
       setDate(date.toLocaleString('en-GB', { timeZone: 'UTC' }));
     }
@@ -44,6 +49,14 @@ export const FileCard = ({ file }) => {
 
   const handleMenuItemPress = () => {
     dispatch(FilesActions.deleteFile(file));
+  };
+
+  const handleOpenMove = () => {
+    setMove(!move);
+  };
+
+  const handleSubmitMove = () => {
+    dispatch(FilesActions.getMove({ fileName: file.name, toPath: moveTo }));
   };
 
   return (
@@ -84,6 +97,20 @@ export const FileCard = ({ file }) => {
               <Text style={styles.menuItem} onPress={handleMenuItemPress}>
                 Delete File
               </Text>
+              <SafeAreaView style={styles.input_container}>
+                <Text onPress={handleOpenMove}>Move File</Text>
+                {move && (
+                  <>
+                    <TextInput
+                      placeholder='To'
+                      onChangeText={setMoveTo}
+                      value={moveTo}
+                      style={styles.input}
+                    />
+                    <Button title='Submit Move' onPress={handleSubmitMove} />
+                  </>
+                )}
+              </SafeAreaView>
               {file['.tag'] === 'file' && (
                 <View style={styles.info}>
                   <Text style={styles.info_text}>Last Modified: </Text>
@@ -117,6 +144,19 @@ const styles = StyleSheet.create({
   info_text: {
     color: 'grey',
     fontSize: 12,
+  },
+  input_container: {
+    padding: 10,
+    flex: 1,
+    flexDirection: 'column',
+    gap: 3,
+  },
+  input: {
+    borderRadius: 5,
+    borderWidth: 1,
+    height: 35,
+    padding: 10,
+    borderColor: 'black',
   },
   container: {
     flex: 1,
