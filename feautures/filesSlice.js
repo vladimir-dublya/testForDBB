@@ -20,11 +20,10 @@ const filesSlice = createSlice({
     },
     movePathForward: (state, action) => {
       state.path = state.path + `/${action.payload}`;
-      console.log('ghjgjhg', state.path);
     },
-    movePathBack: (state, action) => {
-      state.path = state.path.split('/').pop().join('/');
-      console.log('back');
+    movePathBack: (state) => {
+      const arrPath = state.path.split('/');
+      state.path = state.path.slice(0, -arrPath[arrPath.length - 1].length - 1);
     },
     moveHome: (state, action) => {
       state.path = '';

@@ -67,13 +67,18 @@ export default function SettingsScreen() {
     dispatch(FilesActions.initFiles());
   }, [token]);
 
-  const handleBack = () => {
+  const handleHome = () => {
     dispatch(FilesActions.moveHome());
     dispatch(FilesActions.initFiles());
   };
 
   const handleSetToken = () => {
     dispatch(FilesActions.assignUser(tokenFromInput));
+  };
+
+  const handleBack = () => {
+    dispatch(FilesActions.movePathBack());
+    dispatch(FilesActions.initFiles());
   };
 
   return token ? (
@@ -91,6 +96,12 @@ export default function SettingsScreen() {
           <Ionicons
             name='home-outline'
             style={style.iconHome}
+            size={55}
+            onPress={handleHome}
+          />
+          <Ionicons
+            name='arrow-back-outline'
+            style={style.iconBack}
             size={55}
             onPress={handleBack}
           />
@@ -134,6 +145,11 @@ const style = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     right: 10,
+  },
+  iconBack: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
   },
   input: {
     padding: 10,
