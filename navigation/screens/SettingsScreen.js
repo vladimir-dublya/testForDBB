@@ -54,22 +54,6 @@ export default function SettingsScreen() {
     discovery,
   );
 
-  const docPicker = async () => {
-    try {
-      const res = await DocumentPicker.getDocumentAsync();
-
-      const formData = new FormData();
-      formData.append('file', res);
-      dispatch(FilesActions.uploadFile({ token, formData }));
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        console.log('Document picker cancelled');
-      } else {
-        console.log('Error:', err);
-      }
-    }
-  };
-
   React.useEffect(() => {
     if (response?.type === 'success') {
       const { access_token } = response.params;
@@ -88,24 +72,22 @@ export default function SettingsScreen() {
 
   return token ? (
     <>
-      {loading && loadingInfo ? (
+      {loading ? (
         <ActivityIndicator />
       ) : (
         <>
+          <Text style={style.path}>{path}</Text>
           <View style={style.containerCards}>
             {entries.map((entity) => (
               <FileCard file={entity} />
             ))}
           </View>
-          <Ionicons name='home-outline' size={55} onPress={handleBack} />
-          <View
-            style={{
-              width: '30%',
-              justifyContent: 'center',
-            }}
-          >
-            <Button title='Select File' onPress={docPicker} />
-          </View>
+          <Ionicons
+            name='home-outline'
+            style={style.iconHome}
+            size={55}
+            onPress={handleBack}
+          />
         </>
       )}
     </>
@@ -128,6 +110,17 @@ const style = StyleSheet.create({
     width: '100%',
     height: '100%',
     flexDirection: 'row',
+  },
+
+  path: {
+    height: 20,
+    fontSize: 10,
+    width: '100%',
+  },
+  iconHome: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
   },
   containerLogin: {
     flex: 1,
