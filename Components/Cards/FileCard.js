@@ -32,7 +32,7 @@ export const FileCard = ({ file }) => {
   const showContextMenu = () => {
     setContextMenuVisible(true);
     if (file['.tag'] === 'file') {
-      dispatch(FilesActions.getInfo({ token, file }));
+      dispatch(FilesActions.getInfo(file));
       const date = new Date(info.data.client_modified);
       setDate(date.toLocaleString('en-GB', { timeZone: 'UTC' }));
     }
@@ -43,7 +43,7 @@ export const FileCard = ({ file }) => {
   };
 
   const handleMenuItemPress = () => {
-    dispatch(FilesActions.deleteFile({ token, file }));
+    dispatch(FilesActions.deleteFile(file));
   };
 
   return (

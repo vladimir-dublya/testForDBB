@@ -70,19 +70,6 @@ const filesSlice = createSlice({
       state.loadingInfo = false;
       state.error = 'rejected';
     });
-    builder.addCase(uploadFile.pending, (state) => {
-      state.loadingInfo = true;
-    });
-    builder.addCase(uploadFile.fulfilled, (state, action) => {
-      console.log('upload: ', Object.keys(action.payload));
-      //  state.entries = state.entries.push(action.payload);
-      state.loadingInfo = false;
-    });
-    builder.addCase(uploadFile.rejected, (state, action) => {
-      state.loadingInfo = false;
-      console.log('rejected upload:', action);
-      state.error = 'rejected';
-    });
   },
 });
 
@@ -107,19 +94,30 @@ export const initFiles = createAsyncThunk(
   },
 );
 
-export const deleteFile = createAsyncThunk('files/delete', async () => {
-  const temp = await filesService.deleteFile(token);
-  return temp;
-});
+export const deleteFile = createAsyncThunk(
+  'files/delete',
+  async (file, thunkAPI) => {
+    const currentState = thunkAPI.getState();
+    const temp = await filesService.deleteFile({
+      token: currentState.files.token,
+      path: currentState.files.path,
+      file,
+    });
+    return temp;
+  },
+);
 
-export const getInfo = createAsyncThunk('files/info', async () => {
-  const temp = await filesService.getInfo(token);
-  return temp;
-});
-
-export const uploadFile = createAsyncThunk('files/upload', async () => {
-  const temp = await filesService.uploadFile(token);
-  return temp;
-});
+export const getInfo = createAsyncThunk(
+  'files/info',
+  async (file, thunkAPI) => {
+    const currentState = thunkAPI.getState();
+    const temp = await filesService.getInfo({
+      token: currentState.files.token,
+      path: currentState.files.path,
+      file,
+    });
+    return temp;
+  },
+);
 
 export default filesSlice.reducer;
