@@ -96,13 +96,13 @@ export default function SettingsScreen() {
           <Ionicons
             name='home-outline'
             style={style.iconHome}
-            size={55}
+            size={35}
             onPress={handleHome}
           />
           <Ionicons
             name='arrow-back-outline'
             style={style.iconBack}
-            size={55}
+            size={35}
             onPress={handleBack}
           />
         </>

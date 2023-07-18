@@ -1,3 +1,3 @@
 # testForDBB
 
-The first decision was to create navigation using the @react-navigation library. Next, a page was created where the login button and all the files that are in the user's storage will be displayed. For icons, the react-native-vector-icons/Ionicons library was chosen.
+The first solution was to create a navigation using the @react-navigation library. Next, a page was created that will display the login buttons and all the files in the user's storage. For icons, the react-native-vector-icons/Ionicons library was chosen. To store the token and perform asynchronous operations, the redux-toolkit library was taken. It was decided to store all the data in one slice, because access to them was needed in different functions of the slice. The ability to view nested files in folders was also added by adding the path property to redux. Back and Home buttons were implemented. Added the ability to delete files and move them.
